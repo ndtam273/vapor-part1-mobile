@@ -1,15 +1,15 @@
-/// Copyright (c) 2019 Razeware LLC
-///
+/// Copyright (c) 2021 Razeware LLC
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,55 +26,35 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import UIKit
+import Foundation
 
-class UsersTableViewController: UITableViewController {
-  // MARK: - Properties
-  var users: [User] = []
-  let usersRequest = ResourceRequest<User>(resourcePath: "users")
+struct ResourceRequest<ResourceType> where ResourceType: Codable {
   
-  // MARK: - View Life Cycle
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    tableView.tableFooterView = UIView()
+  let baseURL = "http://localhost:8080/api/"
+  let resourceURL: URL
+  
+  init(resourcePath: String) {
+    guard let resourceURL = URL(string: baseURL) else {
+      fatalError("Failed to convert baseURL to an URL")
+    }
+    self.resourceURL = resourceURL.appendingPathComponent(resourcePath)
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    refresh(nil)
-  }
-  
-  // MARK: - IBActions
-  @IBAction func refresh(_ sender: UIRefreshControl?) {
-    usersRequest.getAll { [weak self] result in
-      DispatchQueue.main.async {
-        sender?.endRefreshing()
+  func getAll(completion: @escaping
+                (Result<[ResourceType], ResourceRequestError>) -> Void) {
+    let dataTask = URLSession.shared.dataTask(with: resourceURL) { (data, _ , _) in
+      guard let jsonData = data else {
+        completion(.failure(.noData))
+        return
       }
-      switch result {
-      case .failure:
-        ErrorPresenter.showError(message: "There was an error getting the users", on: self)
-      case .success(let users):
-        DispatchQueue.main.async { [weak self] in
-          guard let self = self else { return }
-          self.users = users
-          self.tableView.reloadData()
-        }
+      do {
+        let resources = try JSONDecoder()
+          .decode([ResourceType].self, from: jsonData)
+        completion(.success(resources))
+      } catch {
+        completion(.failure(.decodingError))
       }
     }
-  }
-}
-
-// MARK: - UITableViewDataSource
-extension UsersTableViewController {
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return users.count
-  }
-  
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let user = users[indexPath.row]
-    let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath)
-    cell.textLabel?.text = user.name
-    cell.detailTextLabel?.text = user.username
-    return cell
+    dataTask.resume()
   }
 }

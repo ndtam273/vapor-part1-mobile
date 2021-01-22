@@ -27,6 +27,7 @@
 		D2A5F2091F4A9144005CD714 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2A5F2071F4A9144005CD714 /* Main.storyboard */; };
 		D2A5F20B1F4A9144005CD714 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2A5F20A1F4A9144005CD714 /* Assets.xcassets */; };
 		D2A5F2211F4A96D0005CD714 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A5F2201F4A96D0005CD714 /* AppDelegate.swift */; };
+		F70E5BA825BA7C5B00C16CD5 /* ResourceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70E5BA725BA7C5B00C16CD5 /* ResourceRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		D2A5F20A1F4A9144005CD714 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2A5F20F1F4A9144005CD714 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2A5F2201F4A96D0005CD714 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F70E5BA725BA7C5B00C16CD5 /* ResourceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				2323AF7224B8B82100D2E1B6 /* ResourceRequestError.swift */,
 				23FBBD9020669DAD00DBFA59 /* ErrorPresenter.swift */,
 				2323AF7824BDF57700D2E1B6 /* AddToCategoryError.swift */,
+				F70E5BA725BA7C5B00C16CD5 /* ResourceRequest.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				2323AF7724BDF52600D2E1B6 /* CreateAcronymData.swift in Sources */,
 				23FBBD9B2066AFAE00DBFA59 /* SelectUserTableViewController.swift in Sources */,
 				2323AF7324B8B82100D2E1B6 /* ResourceRequestError.swift in Sources */,
+				F70E5BA825BA7C5B00C16CD5 /* ResourceRequest.swift in Sources */,
 				23FBBD842066980600DBFA59 /* UsersTableViewController.swift in Sources */,
 				23FBBD862066982500DBFA59 /* CategoriesTableViewController.swift in Sources */,
 				23FBBD8D20669D4F00DBFA59 /* Category.swift in Sources */,
