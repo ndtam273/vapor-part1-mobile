@@ -42,11 +42,34 @@ class CreateAcronymTableViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     acronymShortTextField.becomeFirstResponder()
+    populateUsers()
+  }
+  
+  func populateUsers() {
+    let usersRequest = ResourceRequest<User>(resourcePath: "users")
+    
+    usersRequest.getAll { [weak self] result in
+      switch result {
+      case .failure:
+        let message = "There was an error getting the users"
+        ErrorPresenter.showError(message: message, on: self) { _ in
+          self?.navigationController?.popViewController(animated: true)
+        }
+      case .success(let users):
+        DispatchQueue.main.async { [weak self] in
+          self?.userLabel.text = users[0].name
+        }
+        self?.selectedUser = users[0]
+      }
+    }
   }
 
   // MARK: - Navigation
   @IBSegueAction func makeSelectUserViewController(_ coder: NSCoder) -> SelectUserTableViewController? {
-    return nil
+    guard let user = selectedUser  else {
+      return nil
+    }
+    return SelectUserTableViewController(coder: coder, selectedUser: user)
   }
 
 
@@ -60,5 +83,11 @@ class CreateAcronymTableViewController: UITableViewController {
   }
 
   @IBAction func updateSelectedUser(_ segue: UIStoryboardSegue) {
+    guard let controller = segue.source as? SelectUserTableViewController
+    else {
+      return
+    }
+    selectedUser = controller.selectedUser
+    userLabel.text = selectedUser?.name
   }
 }
