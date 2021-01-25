@@ -46,7 +46,11 @@ class AcronymsTableViewController: UITableViewController {
 
   // MARK: - Navigation
   @IBSegueAction func makeAcronymsDetailTableViewController(_ coder: NSCoder) -> AcronymDetailTableViewController? {
-    return nil
+    guard let indexPath = tableView.indexPathForSelectedRow else {
+      return nil
+    }
+    let acronym = acronyms[indexPath.row]
+    return AcronymDetailTableViewController(coder: coder, acronym: acronym)
   }
 
   // MARK: - IBActions
@@ -86,5 +90,14 @@ extension AcronymsTableViewController {
     cell.textLabel?.text = acronym.short
     cell.detailTextLabel?.text = acronym.long
     return cell
+  }
+  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if let id = acronyms[indexPath.row].id {
+      let acronymDetailRequester = AcronymRequest(acronymID: id)
+      acronymDetailRequester.delete()
+    }
+    
+    acronyms.remove(at: indexPath.row)
+    tableView.deleteRows(at: [indexPath], with: .automatic)
   }
 }
