@@ -118,7 +118,7 @@ class AcronymDetailTableViewController: UITableViewController {
   }
 
   @IBSegueAction func makeAddToCategoryController(_ coder: NSCoder) -> AddToCategoryTableViewController? {
-    return nil
+    AddToCategoryTableViewController(coder: coder, acronym: acronym, selectedCategories: categories)
   }
 
 
@@ -138,7 +138,7 @@ class AcronymDetailTableViewController: UITableViewController {
 // MARK: - UITableViewDataSource
 extension AcronymDetailTableViewController {
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 4
+    return 5
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -156,8 +156,17 @@ extension AcronymDetailTableViewController {
       cell.textLabel?.text = user?.name
     case 3:
       cell.textLabel?.text = categories[indexPath.row].name
+    case 4:
+      cell.textLabel?.text = "Add To Category"
     default:
       break
+    }
+    if indexPath.section == 4 {
+      cell.selectionStyle = .default
+      cell.isUserInteractionEnabled = true
+    } else {
+      cell.selectionStyle = .none
+      cell.isUserInteractionEnabled = false
     }
     return cell
   }
